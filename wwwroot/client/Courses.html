@@ -1,0 +1,427 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Selection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="datetime-local"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #00796b;
+            color: white;
+        }
+
+        #responseMessage {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+
+        .hidden {
+            display: none;
+        }
+        .logout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        #teacherName {
+            font-size: 18px;
+            color: #333;
+        }
+
+        #logoutBtn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            #logoutBtn:hover {
+                background-color: #c82333;
+            }
+
+        #backButton {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            #backButton:hover {
+                background-color: #5a6268;
+            }
+
+        #submit {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #submit:hover {
+            background-color: #004d40;
+        }
+
+        #submit:active {
+            background-color: #00332f;
+            transform: scale(0.98);
+        }
+
+          
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logout">
+            <span id="teacherName">Welcome, Teacher</span>
+            <div>
+                <button id="backButton" onclick="goBack()">Go Back</button>
+                <button id="logoutBtn">Logout</button>
+            </div>
+        </div>
+        <div class="container">
+
+
+            <h2>Teacher Information</h2>
+
+            <h2>Available Courses</h2>
+            <form id="courseForm">
+                <label for="courseSelect">Select a course:</label>
+                <select id="courseSelect" name="courseSelect" required>
+                    <option value="">--Select a course--</option>
+                </select><br><br>
+
+                <div id="courseIdDisplay" style="margin-top: 10px; font-weight: bold;"></div>
+
+                <label for="start">Start Time:</label>
+                <input type="datetime-local" id="start" name="start" required><br><br>
+                <label for="RoomNumber">Room Number:</label>
+                <input type="text" id="RoomNumber" name="RoomNumber" required><br><br>
+                <button type="submit" style="background-color: #00796b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                    Submit
+                </button>
+            </form>
+
+            <div id="responseMessage"></div>
+
+            <div id="studentsContainer" class="hidden">
+                <h2>Students</h2>
+                <table id="studentsTable" border="1">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Attendance</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <button id="submit">Submit </button>
+            </div>
+        </div>
+        </div>
+
+
+
+
+        <script>
+            // Load teacher info
+            async function loadTeacherInfo() {
+                const teacherId = localStorage.getItem('Id');
+                if (!teacherId) {
+                    document.getElementById('responseMessage').textContent = 'Teacher ID is not available.';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:7012/api/Teachers/${teacherId}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to load teacher information.');
+                    }
+                    const teacher = await response.json();
+                    document.getElementById('teacherName').textContent = ` Welcome, ${teacher.firstName} ${teacher.lastName}`;
+                } catch (error) {
+                    console.error("Error fetching teacher info:", error);
+                    document.getElementById('responseMessage').textContent = 'An error occurred while fetching teacher info.';
+                }
+            }
+
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function () {
+                localStorage.clear();
+                window.location.href = "Home.html";
+            });
+
+            // Load courses for the teacher
+            async function loadCourses() {
+                const teacherId = localStorage.getItem('Id');
+                if (!teacherId) {
+                    document.getElementById('responseMessage').textContent = 'Teacher ID is not available.';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:7012/api/Courses/byTeacher/${teacherId}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to load courses.');
+                    }
+                    const data = await response.json();
+
+                    const courseSelect = document.getElementById('courseSelect');
+                    courseSelect.innerHTML = '<option value="">--Select a course--</option>';
+
+                    if (data.length > 0) {
+                        data.forEach(course => {
+                            const option = document.createElement('option');
+                            option.value = course.courseId;
+                            option.textContent = course.courseName;
+                            courseSelect.appendChild(option);
+                        });
+                    } else {
+                        courseSelect.innerHTML = '<option value="">No courses available</option>';
+                    }
+                } catch (error) {
+                    console.error("Error fetching courses:", error);
+                    document.getElementById('responseMessage').textContent = 'An error occurred while fetching courses.';
+                }
+            }
+
+            // Load students by course ID
+            async function loadStudents(courseId) {
+                try {
+                    const response = await fetch(`http://localhost:7012/api/Courses/GetStudentsByCourse/${courseId}`);
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`Failed to load students. Status: ${response.status} - ${errorMessage}`);
+                    }
+                    const students = await response.json();
+                    const studentsTable = document.getElementById("studentsTable").getElementsByTagName("tbody")[0];
+                    studentsTable.innerHTML = '';
+
+                    students.forEach(student => {
+                        const row = studentsTable.insertRow();
+                        const nameCell = row.insertCell(0);
+                        const attendanceCell = row.insertCell(1);
+                        const notesCell = row.insertCell(2);
+
+                        const attendanceSelect = document.createElement("select");
+                        attendanceSelect.dataset.studentId = student.studentId;
+
+                        const presentOption = document.createElement("option");
+                        presentOption.value = "Present";
+                        presentOption.text = "Present";
+                        attendanceSelect.appendChild(presentOption);
+
+                        const absentOption = document.createElement("option");
+                        absentOption.value = "Absent";
+                        absentOption.text = "Absent";
+                        attendanceSelect.appendChild(absentOption);
+
+                        const lateOption = document.createElement("option");
+                        lateOption.value = "Late";
+                        lateOption.text = "Late";
+                        attendanceSelect.appendChild(lateOption);
+
+                        attendanceCell.appendChild(attendanceSelect);
+                        nameCell.textContent = `${student.firstName} ${student.lastName}`;
+
+                        const notesInput = document.createElement("input");
+                        notesInput.type = "text";
+                        notesInput.dataset.studentId = student.studentId;
+                        notesCell.appendChild(notesInput);
+                    });
+
+                    document.getElementById("studentsContainer").style.display = "block";
+                } catch (error) {
+                    console.error("Error fetching students:", error);
+                    document.getElementById('responseMessage').textContent = 'An error occurred while fetching students.';
+                }
+            }
+
+            // Post attendance data to the server
+            const postAttendance = async (attendanceData) => {
+                try {
+                    const response = await fetch('http://localhost:7012/api/Attendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(attendanceData)
+                    });
+
+                    if (!response.ok) {
+                        const errorMessage = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${errorMessage}`);
+
+                    }
+                    const message = await response.text();
+                    console.log(message); // הדפס את ההודעה מהשרת
+                } catch (error) {
+                    console.error("Error creating attendance record:", error);
+                }
+            };
+
+            // Submit attendance
+            document.getElementById('submit').addEventListener('click', async function () {
+                const courseId = document.getElementById('courseSelect').value;
+                const start = document.getElementById('start').value;
+                const RoomNumber = document.getElementById('RoomNumber').value;
+                const teacherId = localStorage.getItem('Id'); // Get teacher ID
+
+                if (courseId && start && RoomNumber) {
+                    const studentsTable = document.getElementById("studentsTable");
+                    const checkboxes = studentsTable.querySelectorAll("tbody select");
+                    const notesInputs = studentsTable.querySelectorAll("tbody input[type='text']");
+
+                    for (let i = 0; i < checkboxes.length; i++) {
+                        const attendanceSelect = checkboxes[i];
+                        const notesInput = notesInputs[i];
+                        const studentId = attendanceSelect.dataset.studentId;
+                        const status = attendanceSelect.value; // Get selected attendance status
+                        const notes = notesInput.value;
+
+                        const attendanceData = {
+                            Status: status,
+                            RoomNumber: RoomNumber,
+                            Start: new Date(start).toISOString(),
+                            Notes: notes,
+                            DurationMinutes: 0,
+                            StudentId: parseInt(studentId, 10),
+                            CourseId: parseInt(courseId, 10),
+                            TeacherId: parseInt(teacherId, 10) // Add TeacherId from localStorage
+                        };
+
+                        postAttendance(attendanceData);
+                    }
+
+                    document.getElementById('responseMessage').textContent = "Attendance records submitted successfully.";
+                } else {
+                    document.getElementById('responseMessage').textContent = "Please fill in all required fields.";
+                }
+            });
+
+            // Event listeners for form
+            document.getElementById('courseForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const courseId = document.getElementById('courseSelect').value;
+                if (courseId) {
+                    loadStudents(courseId);
+                    document.getElementById("courseIdDisplay").textContent = `Course ID: ${courseId}`;
+                } else {
+                    document.getElementById("courseIdDisplay").textContent = '';
+                    document.getElementById("studentsContainer").style.display = "none";
+                }
+            });
+
+            // Initialize page by loading teacher info and courses
+            const teacherId = localStorage.getItem('Id');
+            if (teacherId) {
+                loadTeacherInfo();
+                loadCourses();
+            } else {
+                console.error("Teacher ID is not available.");
+                document.getElementById('responseMessage').textContent = 'Teacher ID is not available.';
+            }
+
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function () {
+                // Clear all data from localStorage
+                localStorage.clear();
+
+                // Redirect to the home page
+                window.location.href = "Home.html";
+            });
+
+            // Function to go back to the previous page
+            function goBack() {
+                window.history.back();
+            }
+
+        </script>
+</body>
+</html>

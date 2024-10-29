@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .menu a {
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            background-color: #00796b;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+            .menu a:hover {
+                background-color: #004d40;
+            }
+
+
+        #teacherName {
+            font-size: 18px;
+            color: #333;
+        }
+
+
+        .logout {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        #teacherName {
+            font-size: 18px;
+            color: #333;
+        }
+
+        #logoutBtn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            #logoutBtn:hover {
+                background-color: #c82333;
+            }
+
+        #backButton {
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            #backButton:hover {
+                background-color: #5a6268;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logout">
+            <span id="teacherName">Welcome, Teacher</span>
+            <div>
+                <button id="backButton" onclick="goBack()">Go Back</button>
+                <button id="logoutBtn">Logout</button>
+            </div>
+        </div>
+
+        <h1>Grades Page</h1>
+
+        <div class="menu">
+            <a href="Assignments.html" class="menu-item">Assignments</a>
+            <a href="Exams.html" class="menu-item">Exams</a>
+           
+        
+    </div>
+   
+        <script>
+            // Fetch teacher details
+            async function fetchTeacherDetails() {
+                const teacherId = localStorage.getItem('Id');
+
+                if (!teacherId) {
+                    document.getElementById('responseMessage').textContent = 'Teacher ID is not available.';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:7012/api/Teachers/${teacherId}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to load teacher information.');
+                    }
+                    const teacher = await response.json();
+                    document.getElementById('teacherName').textContent = `Welcome, ${teacher.firstName} ${teacher.lastName}`;
+                } catch (error) {
+                    console.error("Error fetching teacher info:", error);
+                    document.getElementById('responseMessage').textContent = 'An error occurred while fetching teacher info.';
+                }
+            }
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function () {
+                localStorage.clear();
+                window.location.href = "Home.html";
+            });
+
+
+            // Go back to the previous page
+            function goBack() {
+                window.history.back();
+            }
+
+            // Load teacher details
+            fetchTeacherDetails();
+        </script>
+
+</body>
+</html>

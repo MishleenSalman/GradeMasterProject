@@ -1,0 +1,65 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Assignments.html",
+      "PackagePath": "staticwebassets\\client\\Assignments.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Courses.html",
+      "PackagePath": "staticwebassets\\client\\Courses.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Enrollment.html",
+      "PackagePath": "staticwebassets\\client\\Enrollment.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Exams.html",
+      "PackagePath": "staticwebassets\\client\\Exams.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Grades.html",
+      "PackagePath": "staticwebassets\\client\\Grades.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Home.html",
+      "PackagePath": "staticwebassets\\client\\Home.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Login.html",
+      "PackagePath": "staticwebassets\\client\\Login.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Main.html",
+      "PackagePath": "staticwebassets\\client\\Main.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Register.html",
+      "PackagePath": "staticwebassets\\client\\Register.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\Students.html",
+      "PackagePath": "staticwebassets\\client\\Students.html"
+    },
+    {
+      "Id": "C:\\Users\\mashl\\source\\repos\\GradeMasterAPInew\\GradeMasterAPInew\\wwwroot\\client\\finalGrade.html",
+      "PackagePath": "staticwebassets\\client\\finalGrade.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.GradeMasterAPInew.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.GradeMasterAPInew.props",
+      "PackagePath": "build\\GradeMasterAPInew.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.GradeMasterAPInew.props",
+      "PackagePath": "buildMultiTargeting\\GradeMasterAPInew.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.GradeMasterAPInew.props",
+      "PackagePath": "buildTransitive\\GradeMasterAPInew.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

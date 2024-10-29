@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #e0f7fa; /* Light background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height */
+            background-image: linear-gradient(to bottom right, #e0f7fa, #ffffff);
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* White background with transparency */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin: 20px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #00796b; /* Border color on focus */
+            outline: none; /* Remove outline */
+        }
+
+        button {
+            padding: 15px;
+            background-color: #00796b; /* Dark green color */
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 10px; /* Margin between buttons */
+        }
+
+            button:hover {
+                background-color: #004d40; /* Darker color on hover */
+                transform: translateY(-2px); /* Lift the button slightly on hover */
+            }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px; /* Margin below the heading */
+        }
+
+        p {
+            color: #555; /* Lighter text color for messages */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teacher Registration</h1>
+        <form id="registrationForm">
+            <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
+            <button type="submit">Register</button>
+            <button type="button" onclick="goBack()">Back</button> <!-- Back button -->
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const teacherData = {
+                FirstName: document.getElementById('firstName').value,
+                LastName: document.getElementById('lastName').value,
+                Email: document.getElementById('email').value,
+                Password: document.getElementById('password').value,
+                PhoneNumber: document.getElementById('phoneNumber').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:7012/api/Teachers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(teacherData)
+                });
+
+                if (response.ok) {
+                    document.getElementById('message').textContent = 'Registration successful!';
+                    // Redirect to MAIN page
+                    window.location.href = "main.html"; // Insert the URL of your MAIN page here
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById('message').textContent = 'There was a problem with registration: ' + (errorData.message || 'Please try again.');
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = 'Network error, please try again.';
+                console.error("Network error:", error);
+            }
+        });
+
+        function goBack() {
+            window.history.back(); // Go back to the previous page
+        }
+    </script>
+</body>
+</html>
