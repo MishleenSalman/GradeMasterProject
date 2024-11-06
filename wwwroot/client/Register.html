@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -109,14 +109,14 @@
                 if (response.ok) {
                     document.getElementById('message').textContent = 'Registration successful!';
                     // Redirect to MAIN page
-                    window.location.href = "main.html"; // Insert the URL of your MAIN page here
                 } else {
                     const errorData = await response.json();
+                    console.log('Error response data:', errorData); // Log error data to console
                     document.getElementById('message').textContent = 'There was a problem with registration: ' + (errorData.message || 'Please try again.');
                 }
             } catch (error) {
                 document.getElementById('message').textContent = 'Network error, please try again.';
-                console.error("Network error:", error);
+                console.error("Network error:", error); // Log error to console
             }
         });
 
