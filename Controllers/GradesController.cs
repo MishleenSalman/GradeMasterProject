@@ -1,4 +1,4 @@
-﻿using GradeMasterAPInew.APIModels;
+using GradeMasterAPInew.APIModels;
 using GradeMasterAPInew.Controllers.DB;
 using GradeMasterAPInew.Controllers.DB.DBModels;
 using Microsoft.AspNetCore.Mvc;
@@ -67,7 +67,7 @@ namespace YourNamespace.Controllers
                 .Where(s => s.StudentId == studentId)
                 .Select(s => new AssignmentDTO
                 {
-                    SubmissionGrade = s.Grade
+                    SubmissionGrade = s.SubmissionGrade
                 })
                 .FirstOrDefaultAsync();
 
@@ -118,18 +118,27 @@ namespace YourNamespace.Controllers
                         (_context.Attendances.Count(a => a.StudentId == e.StudentId) == 0 ? 1 : _context.Attendances.Count(a => a.StudentId == e.StudentId)),
                     SubmissionGrade = _context.AssignmentSubmissions
                         .Where(s => s.StudentId == e.StudentId)
-                        .Select(s => s.Grade)
+                        .Select(s => s.SubmissionGrade)
                         .FirstOrDefault(),
                     ExamGrade = _context.ExamSubmissions
                         .Where(ex => ex.StudentId == e.StudentId)
                         .Select(ex => ex.Grade)
                         .FirstOrDefault(),
-                    FinalGradeData = e.Student.FinalGrades.FirstOrDefault(g => g.CourseId == courseId),
-                    FinalGrade = e.FinalGrade, // אם זה השם הנכון של השדה
-
                     Feedback = e.Student.FinalGrades.FirstOrDefault(g => g.CourseId == courseId) != null ?
                                e.Student.FinalGrades.FirstOrDefault(g => g.CourseId == courseId).Feedback : ""
-                }).ToList();
+                })
+                .AsEnumerable()
+                .Select(g => new
+                {
+                    g.StudentId,
+                    g.CourseId,
+                    g.AttendanceGrade,
+                    g.SubmissionGrade,
+                    g.ExamGrade,
+                    FinalGrade = CalculateFinalGrade(g.AttendanceGrade, g.SubmissionGrade, g.ExamGrade),
+                    g.Feedback
+                })
+                .ToList();
 
             // בדיקה אם נמצאו ציונים
             if (!studentGrades.Any())
@@ -143,6 +152,7 @@ namespace YourNamespace.Controllers
             // החזרת נתוני הסטודנטים והממוצע
             return Ok(new { studentGrades, averageGrade });
         }
+
 
 
         [HttpPost("addOrUpdateGrade")]
